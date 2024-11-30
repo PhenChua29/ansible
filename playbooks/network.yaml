@@ -1,0 +1,6 @@
+---
+- name: Setup network and DNS resolver
+  hosts: localhost
+  become: true
+  roles:
+    - network

@@ -1,0 +1,8 @@
+---
+- name: Install requirements
+  hosts: localhost
+
+  tasks:
+  - name: Install community.general module
+    ansible.builtin.command:
+      cmd: ansible-galaxy collection install community.general

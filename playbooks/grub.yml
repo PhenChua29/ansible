@@ -1,0 +1,23 @@
+---
+
+- name: Init
+  hosts: localhost
+  tasks:
+    - name: Get blocks's data
+      ansible.builtin.command: lsblk -l
+      register: lsblk_output
+
+    - name: List blocks for prompting
+      ansible.builtin.debug:
+        var: lsblk_output.stdout_lines
+
+- name: Install and configurate Grub
+  hosts: localhost
+  become: true
+  vars_prompt:
+    - name: efi_dir
+      prompt: Please enter the location of the EFI directory
+      private: false
+  roles:
+    - grub
+

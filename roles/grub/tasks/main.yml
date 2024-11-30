@@ -1,0 +1,48 @@
+---
+- name: Ensure dependencies
+  ansible.builtin.package:
+    name:
+      - grub
+      - efibootmgr
+      - os-prober
+    state: present
+
+- name: Install Grub
+  ansible.builtin.command:
+    argv:
+      - grub-install
+      - --efi-directory={{ efi_dir }} 
+      - --bootloader-id=GRUB
+
+- name: Enable os-prober for grub to detect other systems
+  ansible.builtin.lineinfile:
+    path: /etc/default/grub
+    regexp: "^#GRUB_DISABLE_OS_PROPER=false$"
+    line: "GRUB_DISABLE_OS_PROPER=false"
+    backup: true
+          
+- name: Setting Grub's config path variable
+  set_fact:
+    grub_conf_path: "{{ efi_dir }}/grub/grub.cfg"
+
+- name: Generate Grub's configuration
+  ansible.builtin.command:
+    argv:
+      - grub-mkconfig
+      - --output={{ grub_conf_path }}
+
+- name: Get config file's status
+  ansible.builtin.stat:
+    path: "{{ grub_conf_path }}"
+  register: conf_file_status
+
+- name: Print config file's state
+  ansible.builtin.debug:
+    msg: "Config file exist: {{ conf_file_status.stat.exists }}"
+
+- name: Print successful message
+  ansible.builtin.debug:
+    msg: "Generate grub's config file successfully."
+  when: conf_file_status.stat.exists
+  
+
