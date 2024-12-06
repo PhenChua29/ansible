@@ -1,8 +1,0 @@
-- name: Test Ansible
-  hosts: localhost
-  tasks:
-    - name: Ping localhost
-      ping:
-    - name: Print a message
-      debug:
-        msg: "Ansible is working, enjoy!"
