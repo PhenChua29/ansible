@@ -1,0 +1,6 @@
+---
+- name: Install linux-firmware
+  ansible.builtin.package:
+    name:
+      - linux-firmware
+    state: present

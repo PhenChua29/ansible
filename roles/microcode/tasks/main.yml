@@ -1,0 +1,7 @@
+---
+- name: Install microcode
+  ansible.builtin.package:
+    name:
+      - intel-ucode
+    state: present
+

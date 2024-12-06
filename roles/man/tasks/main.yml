@@ -1,0 +1,6 @@
+---
+- name: Install man
+  ansible.builtin.package:
+    name:
+      - man
+    state: present

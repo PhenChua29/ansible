@@ -1,0 +1,6 @@
+---
+- name: Setup firmware
+  hosts: localhost
+  become: true
+  roles:
+    - firmware

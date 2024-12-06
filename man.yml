@@ -1,0 +1,6 @@
+---
+- name: Install manual
+  hosts: localhost
+  become: true
+  roles:
+    - man

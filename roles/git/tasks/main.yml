@@ -1,0 +1,25 @@
+---
+- name: Ensure that git exists
+  ansible.builtin.package:
+    name:
+      - git
+    state: present
+
+- name: Set global user's name
+  ansible.builtin.command:
+    argv:
+      - git
+      - config
+      - --global
+      - user.name
+      - "{{ user_name }}"
+
+
+- name: Set global user's email
+  ansible.builtin.command:
+    argv:
+      - git
+      - config
+      - --global
+      - user.email
+      - "{{ user_email }}"
