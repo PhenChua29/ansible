@@ -17,23 +17,24 @@
 - name: Enable os-prober for grub to detect other systems
   ansible.builtin.lineinfile:
     path: /etc/default/grub
-    regexp: "^#GRUB_DISABLE_OS_PROPER=false$"
-    line: "GRUB_DISABLE_OS_PROPER=false"
-    backup: true
-          
-- name: Setting Grub's config path variable
-  set_fact:
-    grub_conf_path: "{{ efi_dir }}/grub/grub.cfg"
+    regexp: "^#GRUB_DISABLE_OS_PROBER=false$"
+    line: "GRUB_DISABLE_OS_PROBER=false"
+
+- name: Set grub menu's timeout to 10000 seconds
+  ansible.builtin.lineinfile:
+    path: /etc/default/grub
+    regexp: "^GRUB_TIMEOUT="
+    line: "GRUB_TIMEOUT=10000"
 
 - name: Generate Grub's configuration
   ansible.builtin.command:
     argv:
       - grub-mkconfig
-      - --output={{ grub_conf_path }}
+      - --output=/boot/grub/grub.cfg
 
 - name: Get config file's status
   ansible.builtin.stat:
-    path: "{{ grub_conf_path }}"
+    path: /boot/grub/grub.cfg
   register: conf_file_status
 
 - name: Print config file's state
@@ -45,4 +46,3 @@
     msg: "Generate grub's config file successfully."
   when: conf_file_status.stat.exists
   
-

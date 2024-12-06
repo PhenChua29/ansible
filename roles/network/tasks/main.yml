@@ -5,46 +5,48 @@
       - iwd
     state: present
 
+- name: Set the hostname
+  ansible.builtin.command:
+    argv:
+      - hostnamectl
+      - hostname
+      - phenchua-laptop
+
 - name: Enable iwd.service
   ansible.builtin.systemd_service:
     name: iwd
     enabled: true
     state: started
 
+- name: Ensure that iwd's configuration directory exists
+  ansible.builtin.file:
+    path: /etc/iwd
+    state: directory
+
+- name: Ensure that iwd's configuration file exists
+  ansible.builtin.file:
+    path: /etc/iwd/main.conf
+    state: touch
+
+- name: Turn on iwd's DHCP client 
+  ansible.builtin.blockinfile:
+    path: /etc/iwd/main.conf
+    block: |
+      [General]
+      EnableNetworkConfiguration=true
+    backup: yes
+
 - name: Enable DNS resolver (systemd-resolved)
   ansible.builtin.systemd_service:
     name: systemd-resolved
     enabled: true
     state: started
-  
-- name: Set Google DNS in resolver's config file
-  ansible.builtin.blockinfile:
-    path: /etc/resolv.conf
-    block: |
-      nameserver 8.8.8.8
-      nameserver 8.8.4.4
-    backup: yes
 
-- name: Enable Network Service
-  ansible.builtin.systemd_service:
-    name: systemd-networkd
-    enabled: true
-    state: started
-
-- name: Restart DNS resolver to load the configuration
-  ansible.builtin.systemd_service:
-    name: systemd-resolved
-    state: restarted
-
-- name: Set up routing table
+- name: Add symbolic link so that DNS is working correctly for softwares that read /etc/resolv.conf directly
   ansible.builtin.command:
     argv:
-      - ip
-      - route
-      - add
-      - "default via 192.168.1.1 dev wlan0"
+      - ln
+      - -sf
+      - ../run/systemd/resolve/stub-resolv.conf
+      - /etc/resolv.conf
 
-- name: Restart Network Service 
-  ansible.builtin.systemd_service:
-    name: systemd-networkd
-    state: restarted
