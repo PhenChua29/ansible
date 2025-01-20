@@ -1,0 +1,14 @@
+---
+- name: Install package
+  become: true
+  ansible.builtin.package:
+    name:
+      - docker
+      - docker-compose
+    state: present
+
+- name: Enable docker.socket
+  ansible.builtin.service:
+    name: docker.socket
+    enabled: true
+    state: started

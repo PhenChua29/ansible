@@ -1,6 +1,5 @@
 ---
 - name: Install Yay
   hosts: localhost
-  become: true
   roles:
     - yay

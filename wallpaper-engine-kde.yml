@@ -1,0 +1,5 @@
+---
+- name: Install wallpaper-engine kde plugin
+  hosts: localhost
+  roles:
+    - wallpaper-engine-kde

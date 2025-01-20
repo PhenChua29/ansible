@@ -12,7 +12,7 @@
       - hostname
       - phenchua-laptop
 
-- name: Enable iwd.service
+- name: Enable iwd's service
   ansible.builtin.systemd_service:
     name: iwd
     enabled: true
@@ -28,13 +28,13 @@
     path: /etc/iwd/main.conf
     state: touch
 
-- name: Turn on iwd's DHCP client 
+- name: Turn on iwd's internal DHCP client
   ansible.builtin.blockinfile:
     path: /etc/iwd/main.conf
     block: |
       [General]
       EnableNetworkConfiguration=true
-    backup: yes
+    backup: true
 
 - name: Enable DNS resolver (systemd-resolved)
   ansible.builtin.systemd_service:
@@ -50,3 +50,15 @@
       - ../run/systemd/resolve/stub-resolv.conf
       - /etc/resolv.conf
 
+- name: Configure hosts
+  block:
+
+    - name: Add ipv4 localhost
+      ansible.builtin.lineinfile:
+        path: /etc/hosts
+        line: "127.0.0.1 localhost"
+
+    - name: Add ipv6 localhost
+      ansible.builtin.lineinfile:
+        path: /etc/hosts
+        line: "::1 localhost"

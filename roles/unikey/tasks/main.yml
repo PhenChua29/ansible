@@ -1,0 +1,57 @@
+---
+- name: Install ibus
+  become: true
+  ansible.builtin.package:
+    name: ibus
+    state: present
+
+- name: Install ibus-bamboo
+  kewlfft.aur.aur:
+    name: ibus-bamboo
+    state: present
+
+- name: Modify /etc/environment
+  become: true
+  block:
+    - name: Change GTK_IM_MODULE value
+      ansible.builtin.lineinfile:
+        path: /etc/environment
+        regexp: "^GTK_IM_MODULE="
+        line: "GTK_IM_MODULE=ibus"
+
+    - name: Change QT_IM_MODULE value
+      ansible.builtin.lineinfile:
+        path: /etc/environment
+        regexp: "^QT_IM_MODULE="
+        line: "QT_IM_MODULE=ibus"
+
+    - name: Change XMODIFIERS value
+      ansible.builtin.lineinfile:
+        path: /etc/environment
+        regexp: "^XMODIFIERS="
+        line: "XMODIFIERS=@im=ibus"
+
+- name: Symlink script to launch IBus on user login
+  ansible.builtin.file:
+    src: "{{ unikey_home }}/dotfiles/plasma/plasma-workspace/ibus"
+    dest: "{{ unikey_home }}/.config/plasma-workspace/env/ibus"
+    state: link
+
+- name: Ensure Vietnamese locale is generated and used
+  become: true
+  block:
+    - name: Set locale.gen link to dotfiles
+      ansible.builtin.file:
+        src: "{{ unikey_home }}/dotfiles/locale/locale.gen"
+        dest: /etc/locale.gen
+        state: link
+
+    - name: Generate locale
+      ansible.builtin.command: locale-gen
+      register: result
+      changed_when: result.rc == 0
+
+    - name: Set the system locale to Vietnamese
+      ansible.builtin.command: localectl set-locale LANG=vi_VN
+      register: result
+      changed_when: result.rc == 0

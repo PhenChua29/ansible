@@ -1,0 +1,15 @@
+---
+- name: Install packages
+  become: true
+  ansible.builtin.package:
+    name:
+      - intel-media-driver # Enable VA-API support for Intel
+      - libva-nvidia-driver # Enable VA-API support for nvidia
+      - libva-utils # To view VA-API info
+    state: present
+
+- name: Set environment variables
+  become: true
+  ansible.builtin.blockinfile:
+    path: /etc/environment
+    block: "{{ env_block }}"

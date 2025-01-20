@@ -1,0 +1,9 @@
+---
+- name: Configure swap file
+  hosts: localhost
+  vars_prompt:
+    - name: swap_size
+      prompt: Please enter the desired swap file's size
+      private: false
+  roles:
+    - swap

@@ -1,0 +1,8 @@
+---
+updated_hooks: >-
+  {{
+    lookup("file", "/etc/mkinitcpio.conf")
+    | ansible.builtin.regex_search("^HOOKS=\((.*)\)", multiline=True)
+    | ansible.builtin.regex_replace("kms", "")
+    | ansible.builtin.regex_replace("\s+", " ")
+  }}

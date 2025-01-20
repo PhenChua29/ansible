@@ -1,0 +1,5 @@
+---
+- name: Install Supergfxctl
+  hosts: localhost
+  roles:
+    - supergfxctl

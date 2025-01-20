@@ -1,0 +1,56 @@
+---
+- name: Install AUR packages
+  kewlfft.aur.aur:
+    name: 
+      - android-emulator # Avd emulator runner
+      - android-sdk-cmdline-tools-latest # To get avdmanager for creating avd profiles
+      - android-platform # Required to run avdmanager
+      - android-sdk-platform-tools # To get adb for emulator
+    state: present
+
+- name: Install packages to allow wayland support for emulator
+  become: true
+  ansible.builtin.package:
+    name: 
+      - qt6-wayland
+      - qt5-wayland
+    state: present
+
+- name: Ask if new avd profile should be created
+  ansible.builtin.pause:
+    prompt: "Do you want to create a new avd profile (android image default to Tiramisu API level 33)? (y/N)"
+  register: create_avd
+
+- name: Setup avd profile
+  when: create_avd.user_input | lower == "y"
+  block:
+    - name: Ensure that pexpect library exists 
+      block:
+        - name: Install pexpect
+          become: true
+          ansible.builtin.package:
+            name: python-pexpect
+            state: present
+
+    - name: Accept all SDK licenses
+      ansible.builtin.expect:
+        command: "{{ sdkmanager }} --licenses"
+        responses:
+          '\(y/N\)': 'y'
+
+    - name: Pulling the android image "{{ android_package_path }}"
+      become: true
+      ansible.builtin.expect:
+        command: "{{ sdkmanager }} {{ android_package_path }}"
+        responses:
+          '\(y/N\)': 'y'
+    
+    - name: Create avd profile
+      ansible.builtin.command:
+        argv:
+          - "{{ avdmanager }}"
+          - create
+          - avd
+          - -n android-33
+          - -k "{{ android_package_path }}"
+          - --force

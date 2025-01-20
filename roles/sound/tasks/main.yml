@@ -1,0 +1,27 @@
+---
+- name: Install packages
+  become: true
+  ansible.builtin.package:
+    name:
+      - pipewire
+      - pipewire-audio # To enable audio server support
+      - pipewire-pulse # API implementation for applications using pulseaudio
+      - pipewire-alsa # API implementation for applications using alsa
+      - alsa-utils # To control sounds
+    state: present
+
+- name: Enable user services
+  block:
+    - name: Run pipewire user service
+      ansible.builtin.systemd_service:
+        name: pipewire
+        enabled: true
+        state: started
+        scope: user
+
+    - name: Run pipewire-pulse user service
+      ansible.builtin.systemd_service:
+        name: pipewire-pulse
+        enabled: true
+        state: started
+        scope: user

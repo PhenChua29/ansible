@@ -1,0 +1,5 @@
+---
+- name: Enable VA-API
+  hosts: localhost
+  roles:
+    - hardware_video_acceleration

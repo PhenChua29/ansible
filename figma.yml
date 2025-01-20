@@ -1,0 +1,5 @@
+---
+- name: Install Figma-linux
+  hosts: localhost
+  roles:
+    - figma

@@ -1,0 +1,5 @@
+---
+- name: Setup bluetooth support
+  hosts: localhost
+  roles:
+    - bluetooth

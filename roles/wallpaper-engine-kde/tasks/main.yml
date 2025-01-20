@@ -1,0 +1,12 @@
+---
+- name: Install package
+  kewlfft.aur.aur:
+    name:
+      - plasma6-wallpapers-wallpaper-engine-git
+    state: present
+
+- name: Restart plasmashell user service
+  ansible.builtin.systemd_service:
+    name: plasma-plasmashell
+    state: restarted
+    scope: user

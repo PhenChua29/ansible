@@ -1,6 +1,6 @@
 ---
-- name: Setup network
+- name: Install KDE Plasma
   hosts: localhost
   become: true
   roles:
-    - network
+    - plasma

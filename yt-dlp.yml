@@ -1,0 +1,5 @@
+---
+- name: Install and configure yt-dlp
+  hosts: localhost
+  roles:
+    - yt-dlp

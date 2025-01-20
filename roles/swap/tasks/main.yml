@@ -1,0 +1,64 @@
+---
+- name: Ensure old swap file does not exist
+  become: true
+  block:
+    - name: Turn off swap file
+      ansible.builtin.command: swapoff /swapfile
+      ignore_errors: true
+      register: result
+      changed_when: result.rc == 0
+
+    - name: Remove file
+      ansible.builtin.file:
+        path: /swapfile
+        state: absent
+
+- name: Create swap file
+  become: true
+  register: result
+  changed_when: result.rc == 0
+  ansible.builtin.command:
+    argv:
+      - mkswap
+      - -U
+      - clear
+      - --size
+      - "{{ swap_size }}G"
+      - --file
+      - /swapfile
+
+- name: Activate the swap file
+  become: true
+  register: result
+  changed_when: result.rc == 0
+  ansible.builtin.command: swapon /swapfile
+
+- name: Add swap file entry into fstab
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/fstab
+    line: /swapfile none swap defaults 0 0
+
+- name: Enable zswap
+  become: true
+  block:
+    - name: Create symlink to grub default config file
+      block:
+        - name: Delete the default grub config file
+          ansible.builtin.file:
+            path: /etc/default/grub
+            state: absent
+
+        - name: Create the link
+          ansible.builtin.file:
+            path: /etc/default/grub
+            src: /home/{{ ansible_env.USER }}/dotfiles/grub/grub
+            state: link
+
+    - name: Generate Grub's configuration
+      register: result
+      changed_when: result.rc == 0
+      ansible.builtin.command:
+        argv:
+          - grub-mkconfig
+          - --output=/boot/grub/grub.cfg

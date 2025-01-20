@@ -1,0 +1,7 @@
+---
+- name: Install package
+  kewlfft.aur.aur:
+    name: 
+      - notion-app-electron  
+    state: present
+

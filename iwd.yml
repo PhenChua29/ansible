@@ -1,0 +1,5 @@
+---
+- name: Setup iwd
+  hosts: localhost
+  roles:
+    - iwd

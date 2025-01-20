@@ -1,0 +1,8 @@
+---
+- name: Install packages
+  become: true
+  ansible.builtin.package:
+    name:
+      - dotnet-sdk
+      - aspnet-runtime
+    state: present

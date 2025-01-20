@@ -1,0 +1,31 @@
+---
+- name: Add g14 repo into pacman's database
+  become: true
+  block:
+    - name: Add repo sign key to pacman-key
+      ansible.builtin.command: "{{ add_repo_script }}"
+
+    - name: Update the system
+      ansible.builtin.command: pacman -Syu --noconfirm
+
+- name: Install supergfxctl
+  become: true
+  block:
+    - name: Install packages
+      ansible.builtin.package:
+        name:
+          - supergfxctl
+          - switcheroo-control
+        state: present
+
+    - name: Enable supergfx service
+      ansible.builtin.service:
+        name: supergfxd
+        state: started
+        enabled: true
+
+    - name: Enable switcheroo-control service
+      ansible.builtin.service:
+        name: switcheroo-control
+        state: started
+        enabled: true

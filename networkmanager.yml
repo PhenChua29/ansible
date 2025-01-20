@@ -1,0 +1,6 @@
+---
+- name: Setup NetworkManager
+  hosts: localhost
+  become: true
+  roles:
+    - networkmanager

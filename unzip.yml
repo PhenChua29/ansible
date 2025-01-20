@@ -1,0 +1,5 @@
+---
+- name: Install unzip
+  hosts: localhost
+  roles:
+    - unzip

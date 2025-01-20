@@ -1,0 +1,15 @@
+---
+- name: Install packages
+  become: true
+  ansible.builtin.package:
+    name: 
+      - bluez
+      - bluez-utils
+    state: present
+
+- name: Enable bluetooth service
+  ansible.builtin.service:
+    name: bluetooth
+    enabled: true
+    state: started
+

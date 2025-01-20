@@ -1,0 +1,5 @@
+---
+- name: Install notion-app-election
+  hosts: localhost
+  roles:
+    - notion 

@@ -1,0 +1,5 @@
+---
+- name: Setup macos in docker container
+  hosts: localhost
+  roles:
+    - docker-osx

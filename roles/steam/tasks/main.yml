@@ -1,0 +1,55 @@
+---
+- name: Ensure multilib repository
+  ansible.builtin.file:
+    src: ~/dotfiles/pacman/pacman.conf
+    dest: /etc/pacman.conf
+    state: link
+
+- name: Update repository database
+  become: true
+  ansible.builtin.command: pacman -Sy
+
+- name: Ensure locale is generated
+  become: true
+  block:
+    - name: Set locale.gen link to dotfiles
+      ansible.builtin.file:
+        src: /home/{{ ansible_env.USER }}/dotfiles/locale/locale.gen
+        dest: /etc/locale.gen
+        state: link
+
+    - name: Generate locale
+      ansible.builtin.command:
+        cmd: locale-gen
+
+- name: Increase vm.max_map_count to increase gaming performance
+  become: true
+  block:
+    - name: Ensure /etc/sysctl.d/80-gamecompatibility.conf exists
+      ansible.builtin.file:
+        path: /etc/sysctl.d/80-gamecompatibility.conf
+        state: touch
+
+    - name: Set content
+      ansible.builtin.lineinfile:
+        path: /etc/sysctl.d/80-gamecompatibility.conf
+        line: "vm.max_map_count = 2147483642"
+        state: present
+
+    - name: Apply the change
+      ansible.builtin.command: sysctl --system
+
+- name: Install package
+  become: true
+  ansible.builtin.package:
+    name:
+      # Drivers
+      - vulkan-icd-loader
+      - lib32-vulkan-icd-loader
+      - lib32-nvidia-utils
+
+      - steam
+      - ttf-liberation # Arial font so that steam's ui's texts are not corrupted
+      - lib32-systemd # So that Steam can connect to network properly while using systemd-networkd
+    state: present
+

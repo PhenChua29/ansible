@@ -1,0 +1,5 @@
+---
+- name: Install and configure kvantum
+  hosts: localhost
+  roles:
+    - kvantum

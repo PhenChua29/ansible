@@ -1,0 +1,8 @@
+---
+- name: Install packages
+  become: true
+  ansible.builtin.package:
+    name:
+      - unzip
+      - p7zip
+    state: present

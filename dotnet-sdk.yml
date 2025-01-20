@@ -1,0 +1,5 @@
+---
+- name: Install dotnet-sdk
+  hosts: localhost
+  roles:
+    - dotnet-sdk

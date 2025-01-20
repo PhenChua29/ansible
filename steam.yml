@@ -1,0 +1,5 @@
+---
+- name: Setup Steam
+  hosts: localhost
+  roles:
+    - steam

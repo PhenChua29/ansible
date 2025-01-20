@@ -1,0 +1,5 @@
+---
+- name: Install android emulator
+  hosts: localhost
+  roles:
+    - android-emulator

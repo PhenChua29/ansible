@@ -1,0 +1,21 @@
+---
+- name: Install packages
+  become: true
+  ansible.builtin.package:
+    name:
+      - yt-dlp
+      - ffmpeg # Used for muxing on some sites
+      - aria2 # For faster downloading speed
+    state: present
+
+- name: Ensure that configuration directory exists
+  ansible.builtin.file:
+    mode: "744"
+    path: ~/.config/yt-dlp
+    state: directory
+
+- name: Create symlink to user configuration file
+  ansible.builtin.file:
+    src: ~/dotfiles/yt-dlp/config
+    dest: ~/.config/yt-dlp/config
+    state: link

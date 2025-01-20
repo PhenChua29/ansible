@@ -1,29 +1,22 @@
 ---
 - name: Check dependencies
+  become: true
   ansible.builtin.package:
     name:
       - base-devel
       - git
     state: present
 
-- name: Create temorary build directory
-  ansible.builtin.tempfile:
-    state: directory
-    suffix: yay-build
-  register: tempfile
-
 - name: Clone Yay repository
   ansible.builtin.git:
     repo: "{{ yay_repo }}"
-    dest: "{{ tempfile.path }}"
+    dest: "{{ yay_dir }}"
 
 - name: Build and install Yay
   ansible.builtin.command:
-    cmd: makepkg -si --no-confirm
-    chdir: "{{ tempfile.path }}"
-
-- name: Clean up Yay's build directory
-  ansible.builtin.file:
-    path: "{{ tempfile.path }}"
-    state: absent
+    argv: 
+      - makepkg 
+      - -si 
+      - --noconfirm
+    chdir: "{{ yay_dir }}"
 

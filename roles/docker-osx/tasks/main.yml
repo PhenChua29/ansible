@@ -1,0 +1,76 @@
+---
+- name: Install packages
+  become: true
+  ansible.builtin.package:
+    name:
+      - qemu
+      - libvirt
+      - dnsmasq
+      - virt-manager
+      - bridge-utils
+      - flex bison
+      - iptables-nft
+      - edk2-ovmf
+      - sshfs
+    state: present
+
+- name: Enable libvirt
+  become: true
+  block:
+    - name: Enable libvirtd service
+      ansible.builtin.systemd_service:
+        name: libvirtd
+        state: started
+        enabled: true
+
+    - name: Enable virtlogd service
+      ansible.builtin.systemd_service:
+        name: virtlogd
+        state: started
+        enabled: true
+
+- name: Load the KVM kernel module
+  community.general.modprobe:
+    - name: kvm
+    - state: present
+    - params: "ignore_msrs=1"
+
+- name: Run init script
+  ansible.builtin.command: /home/{{ ansible_env.USER }}/dotfiles/docker-osx/init
+  register: result
+  changed_when: result.rc == 0
+
+- name: Run Docker container for macOS
+  ansible.builtin.docker_container:
+    name: macos_docker
+    image: sickcodes/docker-osx:latest
+    state: started
+    interactive: true
+    tty: true
+    device:
+      - "/dev/kvm:/dev/kvm"
+    ports:
+      - "50922:10022"
+    volumes:
+      - "/tmp/.X11-unix:/tmp/.X11-unix"
+    env:
+      DISPLAY: "{{ lookup('env', 'DISPLAY') | default(':0.0') }}"
+      GENERATE_UNIQUE: "true"
+      CPU: "Haswell-noTSX"
+      CPUID_FLAGS: "kvm=on,vendor=GenuineIntel,+invtsc,vmware-cpuid-freq=on"
+      MASTER_PLIST_URL: "https://raw.githubusercontent.com/sickcodes/osx-serial-generator/master/config-custom-sonoma.plist"
+      SHORTNAME: "sonoma"
+
+- name: Share directories, sharing files, shared folder, mount folder
+  become: true
+  block:
+    - name: Ensure mount point exists
+      ansible.builtin.file:
+        path: "{{ ansible_env.HOME }}/mnt/osx"
+        state: directory
+        mode: '0755'
+
+    - name: Mount remote directory via SSHFS
+      ansible.builtin.command: sshfs {{ USERNAME }}@localhost:/ -p 50922 ~/mnt/osx
+      register: result
+      changed_when: result.rc == 0

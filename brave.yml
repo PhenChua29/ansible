@@ -1,0 +1,5 @@
+---
+- name: Install Brave browser
+  hosts: localhost
+  roles:
+    - brave

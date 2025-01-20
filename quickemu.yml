@@ -1,0 +1,5 @@
+---
+- name: Install quickemu
+  hosts: localhost
+  roles:
+    - quickemu

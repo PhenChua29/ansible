@@ -1,0 +1,6 @@
+---
+android_sdk_path: "/opt/android-sdk"
+sdkmanager: "{{ android_sdk_path }}/cmdline-tools/latest/bin/sdkmanager"
+avdmanager: "{{ android_sdk_path }}/cmdline-tools/latest/bin/avdmanager"
+emulator: "{{ android_sdk_path }}/emulator/emulator"
+android_package_path: "system-images;android-33;google_apis_playstore;x86_64"

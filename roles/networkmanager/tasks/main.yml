@@ -1,0 +1,28 @@
+---
+- name: Install package
+  ansible.builtin.package:
+    name:
+      - networkmanager
+    state: present
+
+- name: Enable NetworkManager service
+  ansible.builtin.systemd_service:
+    name: NetworkManager
+    enabled: true
+    state: started
+
+- name: Enable DNS resolver (systemd-resolved)
+  ansible.builtin.systemd_service:
+    name: systemd-resolved
+    enabled: true
+    state: started
+
+- name: Add symbolic link so that DNS is working correctly for softwares that read /etc/resolv.conf directly
+  ansible.builtin.command:
+    argv:
+      - ln
+      - -sf
+      - ../run/systemd/resolve/stub-resolv.conf
+      - /etc/resolv.conf
+  register: result
+  changed_when: result.rc == 0

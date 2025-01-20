@@ -1,0 +1,11 @@
+---
+- name: Configure time zone to Asia/Ho_Chi_Minh
+  hosts: localhost
+  become: true
+  tasks:
+    - name: Turn on Network Time Protocol
+      ansible.builtin.command: timedatectl set-ntp true
+
+    - name: Change time zone
+      community.general.timezone:
+        name: "Asia/Ho_Chi_Minh"

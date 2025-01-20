@@ -1,0 +1,5 @@
+---
+- name: Setup sound
+  hosts: localhost
+  roles:
+    - sound

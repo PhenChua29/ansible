@@ -1,0 +1,17 @@
+---
+- name: Install packages
+  become: true
+  ansible.builtin.package:
+    name:
+      - nodejs
+      - npm
+      - pnpm
+    state: present
+
+- name: Setup pnpm
+  ansible.builtin.command: pnpm setup
+  
+- name: Update pnpm
+  ansible.builtin.shell: |
+    . ~/.bashrc
+    pnpm add -g pnpm

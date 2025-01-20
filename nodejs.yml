@@ -1,0 +1,5 @@
+---
+- name: Install Node.JS and pnpm
+  hosts: localhost
+  roles:
+    - nodejs

@@ -3,4 +3,5 @@
   ansible.builtin.package:
     name:
       - man
+      - man-pages
     state: present

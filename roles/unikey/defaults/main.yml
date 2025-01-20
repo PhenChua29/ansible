@@ -1,0 +1,2 @@
+---
+unikey_home: /home/{{ ansible_env.USER }}

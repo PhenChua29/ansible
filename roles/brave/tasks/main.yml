@@ -1,0 +1,6 @@
+---
+- name: Install package
+  kewlfft.aur.aur:
+    name:
+      - brave-bin
+    state: present

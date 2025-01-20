@@ -1,0 +1,42 @@
+---
+- name: Install plasma-desktop and sddm
+  ansible.builtin.package:
+    name:
+      - plasma-desktop # minimal plasma packages
+      - sddm # display manager
+      - kscreen # So that the setting doesn't lack the "Display and Monitor" section
+      - bluedevil # Bluetooth applet
+      - plasma-pa # Audio control applet. If the applet showing error, run "systemctl --user restart plasma-plasmashell.service"
+
+- name: Install nvidia packages
+  ansible.builtin.package:
+    name:
+      - nvidia-open # kernel module
+      # - lib32-nvidia-utils # 32-bit application support
+
+- name: Enable sddm service so that it auto start after boot
+  ansible.builtin.systemd_service:
+    name: sddm
+    enabled: true
+    state: started
+
+- name: Remove "kms" from the HOOKS array so that the "nouveau" cannot load any more during early boot
+  ansible.builtin.lineinfile:
+    path: /etc/mkinitcpio.conf
+    regexp: "^HOOKS="
+    line: "{{ updated_hooks }}"
+    backup: true
+
+- name: Debug updated_hooks
+  ansible.builtin.debug:
+    msg: "updated_hooks line: {{ updated_hooks }}"
+
+- name: Rebuild initframes
+  ansible.builtin.command: mkinitcpio -P
+
+# DRM kernel mode setting is enabled by default so skip doing it.
+
+- name: Install screenshot software
+  ansible.builtin.package:
+    name: spectacle
+    state: present

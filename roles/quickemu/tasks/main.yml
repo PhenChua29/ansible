@@ -1,0 +1,13 @@
+---
+- name: Install package
+  kewlfft.aur.aur:
+    name: 
+      - quickemu-git
+    state: present
+
+- name: Install aria2 to improve download speed
+  become: true
+  ansible.builtin.package:
+    name: 
+      - aria2
+    state: present

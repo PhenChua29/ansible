@@ -1,5 +1,5 @@
 ---
-- name: Ensure dependencies
+- name: Install packages
   ansible.builtin.package:
     name:
       - grub
@@ -7,11 +7,11 @@
       - os-prober
     state: present
 
-- name: Install Grub
+- name: Run grub-install
   ansible.builtin.command:
     argv:
       - grub-install
-      - --efi-directory={{ efi_dir }} 
+      - --efi-directory={{ efi_dir }}
       - --bootloader-id=GRUB
 
 - name: Enable os-prober for grub to detect other systems
