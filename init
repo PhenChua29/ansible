@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+echo "Installing required collections..."
+ansible-galaxy install -r requirements.yml
+echo "Done"
