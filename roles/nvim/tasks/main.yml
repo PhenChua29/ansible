@@ -10,6 +10,12 @@
       - ttf-hack-nerd 
     state: present
 
+- name: Create link to the config folder
+  ansible.builtin.file:
+    path: "~/.config/nvim"
+    src: "~/dotfiles/nvim"
+    state: link
+  
 - name: Make install dependencies script runnable
   ansible.builtin.file:
     path: "~/.config/nvim/install-dependency.sh"
