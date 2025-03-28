@@ -1,0 +1,32 @@
+---
+- name: Install package
+  become: true
+  ansible.builtin.package:
+    name:
+      - hyprland
+
+- name: Setup Hyprland config
+  block:
+    - name: Remove existing Hyprland config if not a symlink
+      ansible.builtin.file:
+        path: "{{ ansible_env.HOME }}/.config/hypr"
+        state: absent
+      when: not ansible_stat_result.stat.islnk | default(false)
+
+    - name: Create symbolic link for Hyprland config folder
+      ansible.builtin.file:
+        path: "{{ ansible_env.HOME }}/.config/hypr"
+        src: "{{ ansible_env.HOME }}/dotfiles/hyprland"
+        state: link
+
+- name: Setup nvidia support
+  include_tasks: ./nvidia.yaml 
+
+- name: Setup essential stuff
+  include_tasks: ./essential.yaml
+
+- name: Setup wallpaper support
+  include_tasks: ./wallpaper.yaml
+
+- name: Setup waybar
+  include_tasks: ./waybar.yaml

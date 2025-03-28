@@ -1,0 +1,6 @@
+---
+- name: Install wallpaper-engine linux
+  hosts: localhost
+  roles:
+    - wallpaper-engine-linux
+

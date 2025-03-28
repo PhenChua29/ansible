@@ -1,0 +1,19 @@
+---
+- name: Install package
+  become: true
+  ansible.builtin.package:
+    name:
+      - waybar # Status bar
+
+- name: Setup waybar config 
+  block:
+    - name: Remove existing waybar config if not a symlink
+      ansible.builtin.file:
+        path: "{{ ansible_env.HOME }}/.config/waybar"
+        state: absent
+
+    - name: Create symbolic link for waybar config folder
+      ansible.builtin.file:
+        path: "{{ ansible_env.HOME }}/.config/waybar"
+        src: "{{ ansible_env.HOME }}/dotfiles/waybar"
+        state: link

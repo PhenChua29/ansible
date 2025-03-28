@@ -1,7 +1,7 @@
 ---
 - name: Install AUR packages
   kewlfft.aur.aur:
-    name: 
+    name:
       - android-emulator # Avd emulator runner
       - android-sdk-cmdline-tools-latest # To get avdmanager for creating avd profiles
       - android-platform # Required to run avdmanager
@@ -11,7 +11,7 @@
 - name: Install packages to allow wayland support for emulator
   become: true
   ansible.builtin.package:
-    name: 
+    name:
       - qt6-wayland
       - qt5-wayland
     state: present
@@ -24,7 +24,7 @@
 - name: Setup avd profile
   when: create_avd.user_input | lower == "y"
   block:
-    - name: Ensure that pexpect library exists 
+    - name: Ensure that pexpect library exists
       block:
         - name: Install pexpect
           become: true
@@ -44,7 +44,7 @@
         command: "{{ sdkmanager }} {{ android_package_path }}"
         responses:
           '\(y/N\)': 'y'
-    
+   
     - name: Create avd profile
       ansible.builtin.command:
         argv:

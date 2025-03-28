@@ -3,7 +3,7 @@
   hosts: localhost
   vars_prompt:
     - name: swap_size
-      prompt: Please enter the desired swap file's size
+      prompt: Please enter the desired swap file's size (in GB)
       private: false
   roles:
     - swap

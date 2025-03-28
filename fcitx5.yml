@@ -1,0 +1,5 @@
+---
+- name: Install Fcitx5
+  hosts: localhost
+  roles:
+    - fcitx5 

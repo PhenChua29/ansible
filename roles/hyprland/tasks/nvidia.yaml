@@ -1,0 +1,9 @@
+---
+- name: Install nvidia packages
+  become: true
+  ansible.builtin.package:
+    name:
+      - nvidia-open
+      # - lib32-nvidia-utils # 32-bit application support
+
+# DRM kernel mode setting is enabled by default so skip doing it.

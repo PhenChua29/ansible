@@ -1,0 +1,22 @@
+---
+- name: Install AUR packages
+  kewlfft.aur.aur:
+    name:
+      - mpvpaper 
+      - waypaper
+    state: present
+
+- name: Configure hardware acceleration for mpv
+  block:
+    - name: Ensure mpv config folder exists
+      ansible.builtin.file:
+        path: "{{ ansible_env.HOME }}/.config/mpv"
+        state: directory
+        mode: '0755'
+
+    - name: Create link for the config file
+      ansible.builtin.file:
+        path: "{{ ansible_env.HOME }}/.config/mpv/mpv.conf"
+        src: /home/{{ ansible_env.USER }}/dotfiles/mpv/mpv.conf
+        state: link
+        force: true

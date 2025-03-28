@@ -1,0 +1,15 @@
+---
+- name: Modify /etc/environment
+  become: true
+  block:
+    - name: Change KWIN_DRM_DELAY_VRR_CURSOR_UPDATES value
+      ansible.builtin.lineinfile:
+        path: /etc/environment
+        regexp: "^KWIN_DRM_DELAY_VRR_CURSOR_UPDATES="
+        line: "KWIN_DRM_DELAY_VRR_CURSOR_UPDATES=1"
+
+    - name: Change KWIN_FORCE_SW_CURSOR value
+      ansible.builtin.lineinfile:
+        path: /etc/environment
+        regexp: "^KWIN_FORCE_SW_CURSOR="
+        line: "KWIN_FORCE_SW_CURSOR=1"

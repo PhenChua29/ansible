@@ -1,0 +1,5 @@
+---
+- name: Install Hyper.js terminal
+  hosts: localhost
+  roles:
+    - hyper-term

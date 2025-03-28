@@ -1,0 +1,6 @@
+---
+- name: Install package
+  kewlfft.aur.aur:
+    name:
+      - hyper-bin 
+    state: present

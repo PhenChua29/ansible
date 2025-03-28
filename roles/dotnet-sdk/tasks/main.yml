@@ -3,6 +3,6 @@
   become: true
   ansible.builtin.package:
     name:
-      - dotnet-sdk
-      - aspnet-runtime
+      - dotnet-sdk-8.0 
+      - aspnet-runtime-8.0 
     state: present

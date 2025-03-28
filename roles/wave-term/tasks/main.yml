@@ -1,0 +1,6 @@
+---
+- name: Install package
+  kewlfft.aur.aur:
+    name:
+      - waveterm-bin
+    state: present

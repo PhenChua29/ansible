@@ -1,0 +1,5 @@
+---
+- name: Install Wave terminal
+  hosts: localhost
+  roles:
+    - wave-term

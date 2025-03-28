@@ -1,0 +1,5 @@
+---
+- name: Fix screen fps
+  hosts: localhost
+  roles:
+    - fix-screen-fps

@@ -1,0 +1,91 @@
+---
+- name: Install package
+  become: true
+  ansible.builtin.package:
+    name:
+      - dunst # Notification
+      - xdg-desktop-portal-hyprland # Screen sharing support
+      - waybar # Status bar
+      - hyprpolkitagent # Authentication daemon
+      - network-manager-applet # Wifi control
+      - kwallet # Password manager
+      - uwsm # Universal Wayland session manager
+      - rofi-wayland # Application launcher
+      - blueman # Bluetooth applet
+
+- name: Install AUR packages
+  kewlfft.aur.aur:
+    name:
+      - hyprshot # Screenshot
+    state: present
+
+- name: Setup kwallet integration for password managing
+  block:
+    - name: Ensure kwallet D-BUS service folder exists
+      ansible.builtin.file:
+        path: "{{ ansible_env.HOME }}/.local/share/dbus-1/services"
+        state: directory
+        mode: '0755'
+
+    - name: Create link for the service file
+      ansible.builtin.file:
+        path: "{{ ansible_env.HOME }}/.local/share/dbus-1/services/org.freedesktop.secrets.service"
+        src: /home/{{ ansible_env.USER }}/dotfiles/hyprland/org.freedesktop.secrets.service
+        state: link
+        force: true
+
+- name: Install additional plugins using Hyprland's plugin manager
+  block: 
+    - name: Ensure dependencies
+      become: true
+      ansible.builtin.package:
+        name:
+          - cpio
+          - cmake
+          - meson
+
+    # You should do this manually unfortunately...
+    #
+    # - name: Get the official plugins
+      # block:
+        # - name: Update the plugins
+          # ansible.builtin.command: hyprpm update 
+          # register: result
+          # changed_when: result.rc == 0
+
+        # - name: Ensure that pexpect library exists 
+          # become: true
+          # ansible.builtin.package:
+            # name: python-pexpect
+            # state: present
+
+        # - name: Add the official plugins repo
+          # ansible.builtin.expect:
+            # command: "hyprpm add https://github.com/hyprwm/hyprland-plugins" 
+            # responses:
+              # 'Y/n': 'y'
+              
+        # - name: Add the Hyprspace repo
+          # ansible.builtin.expect:
+            # command: "hyprpm add https://github.com/KZDKM/Hyprspace" 
+            # responses:
+              # 'Y/n': 'y'
+
+    - name: Update hyprpm 
+      ansible.builtin.command: hyprpm update
+      register: hyprpm_output
+      changed_when: hyprpm_output.rc == 0
+
+    - name: Get installed plugin list
+      ansible.builtin.command: hyprpm list 
+      register: hyprpm_output
+      changed_when: hyprpm_output.rc == 0
+
+    - name: Print installed Hyprland plugin list
+      ansible.builtin.debug:
+        var: hyprpm_output.stdout_lines
+
+    - name: Enable Hyprspace
+      ansible.builtin.command: hyprpm add https://github.com/KZDKM/Hyprspace && hyprpm enable Hyprspace
+      register: result
+      changed_when: result.rc == 0     

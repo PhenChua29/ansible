@@ -1,0 +1,11 @@
+---
+- name: Install package
+  become: true
+  ansible.builtin.package:
+    name:
+      - fcitx5  
+      - fcitx5-unikey # Additional modules for Vietnamese typing
+      # - fcitx5-qt # Qt 5/6 support
+      # - fcitx5-gtk # GTK support
+      - fcitx5-configtool # wayland GUI config tool
+    state: present
