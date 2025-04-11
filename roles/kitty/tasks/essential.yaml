@@ -1,0 +1,12 @@
+---
+- name: Install package
+  become: true
+  ansible.builtin.package:
+    name:
+      - imagemagick # Image viewer for kitty's icat
+
+- name: Install AUR packages
+  kewlfft.aur.aur:
+    name: 
+      - timg # Another image viewer. Works inside of tmux
+    state: present

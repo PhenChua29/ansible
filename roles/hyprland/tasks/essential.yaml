@@ -12,6 +12,7 @@
       - uwsm # Universal Wayland session manager
       - rofi-wayland # Application launcher
       - blueman # Bluetooth applet
+      - brightnessctl # Brightness changer
 
 - name: Install AUR packages
   kewlfft.aur.aur:

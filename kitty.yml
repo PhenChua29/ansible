@@ -1,0 +1,5 @@
+---
+- name: Install Kitty 
+  hosts: localhost
+  roles:
+    - kitty

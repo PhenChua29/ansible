@@ -1,0 +1,10 @@
+---
+- name: Install package
+  become: true
+  ansible.builtin.package:
+    name:
+      - kitty
+    state: present
+
+- name: Install essential stuff
+  include_tasks: ./essential.yaml
