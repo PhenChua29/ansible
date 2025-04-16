@@ -1,0 +1,7 @@
+---
+- name: Install package
+  become: true
+  ansible.builtin.package:
+    name:
+      - jdk17-openjdk
+    state: present

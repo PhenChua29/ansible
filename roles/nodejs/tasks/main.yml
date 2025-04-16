@@ -12,6 +12,4 @@
   ansible.builtin.command: pnpm setup
   
 - name: Update pnpm
-  ansible.builtin.shell: |
-    . ~/.bashrc
-    pnpm add -g pnpm
+  ansible.builtin.shell: pnpm self-update 

@@ -1,0 +1,5 @@
+---
+- name: Install android-tools 
+  hosts: localhost
+  roles:
+    - android-min

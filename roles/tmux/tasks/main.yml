@@ -1,0 +1,21 @@
+---
+- name: Install packages
+  become: true
+  ansible.builtin.package:
+    name: 
+      - tmux
+    state: present
+
+- name: Setup config
+  block:
+    - name: Remove existing config folder if not a symlink
+      ansible.builtin.file:
+        path: "{{ ansible_env.HOME }}/.config/tmux"
+        state: absent
+      when: not ansible_stat_result.stat.islnk | default(false)
+
+    - name: Create symbolic link for config folder
+      ansible.builtin.file:
+        path: "{{ ansible_env.HOME }}/.config/tmux"
+        src: "{{ ansible_env.HOME }}/dotfiles/tmux"
+        state: link

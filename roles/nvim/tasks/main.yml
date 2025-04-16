@@ -4,11 +4,30 @@
   ansible.builtin.package:
     name: 
       - neovim
+      - gcc
+      - pnpm # install-dependency.sh
       - wl-clipboard
-      - fd
-      - ripgrep
+      - fd # Search
+      - ripgrep # Search
       - ttf-hack-nerd 
+      - unzip # Mason
+      - npm # Mason
+      - lazygit
     state: present
+
+- name: Setup config
+  block:
+    - name: Remove existing config if not a symlink
+      ansible.builtin.file:
+        path: "{{ ansible_env.HOME }}/.config/nvim"
+        state: absent
+      when: not ansible_stat_result.stat.islnk | default(false)
+
+    - name: Create symbolic link for config folder
+      ansible.builtin.file:
+        path: "{{ ansible_env.HOME }}/.config/nvim"
+        src: "{{ ansible_env.HOME }}/dotfiles/nvim"
+        state: link
 
 - name: Make install dependencies script runnable
   ansible.builtin.file:

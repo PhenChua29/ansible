@@ -1,0 +1,10 @@
+---
+- import_playbook: ./init-home.yml
+- import_playbook: ./install-yay.yml
+- import_playbook: ./dotnet-sdk.yml
+- import_playbook: ./nodejs.yml
+- import_playbook: ./git.yml
+- import_playbook: ./android-min.yml
+- import_playbook: ./tmux.yml
+- import_playbook: ./kitty.yml
+- import_playbook: ./java.yml

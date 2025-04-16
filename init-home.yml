@@ -1,0 +1,5 @@
+---
+- name: Init home config
+  hosts: localhost
+  roles:
+    - init-home

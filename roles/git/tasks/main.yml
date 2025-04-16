@@ -4,6 +4,7 @@
   ansible.builtin.package:
     name:
       - git
+      - less
     state: present
 
 - name: Set global user's name

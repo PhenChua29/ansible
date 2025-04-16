@@ -1,0 +1,7 @@
+---
+- name: Create link for .bashrc
+  ansible.builtin.file:
+    path: "~/.bashrc"
+    src: "~/dotfiles/bash/.bashrc"
+    state: link
+    force: true
