@@ -1,0 +1,9 @@
+---
+- name: uninstall package
+  become: true
+  ansible.builtin.package:
+    name:
+      - kitty
+      - imagemagick
+      - timg
+    state: absent
