@@ -1,0 +1,32 @@
+---
+- name: Install packages
+  become: true
+  ansible.builtin.package:
+    name:
+      - sbctl
+    state: present
+
+- name: Create sbctl key
+  ansible.builtin.command:
+    argv:
+      - sbctl
+      - create-keys
+  register: result
+  changed_when: result.rc == 0
+
+- name: Enroll sbctl key
+  become: true
+  ansible.builtin.command:
+    argv:
+      - sbctl
+      - enroll-keys
+      - -m
+  register: result
+  changed_when: result.rc == 0
+  ignore_errors: true
+
+- name: Sign .efi binaries inside of esp directory
+  become: true
+  ansible.builtin.shell: "fd efi$ '{{ efi_dir }}' | awk '{print \"sbctl sign -s \" $0}' | bash" # or sbctl sign-all if the path is /boot
+  register: result
+  changed_when: result.rc == 0

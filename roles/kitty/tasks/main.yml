@@ -8,3 +8,6 @@
 
 - name: Install essential stuff
   include_tasks: ./essential.yaml
+
+- name: Add config file
+  include_tasks: ./config.yaml

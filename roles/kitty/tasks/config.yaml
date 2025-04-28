@@ -1,0 +1,12 @@
+---
+- name: Remove existing Kitty config if not a symlink
+  ansible.builtin.file:
+    path: "~/.config/kitty"
+    state: absent
+  when: not ansible_stat_result.stat.islnk | default(false)
+
+- name: Create symbolic link for Kitty config folder
+  ansible.builtin.file:
+    path: "~/.config/kitty"
+    src: "~/dotfiles/kitty"
+    state: link

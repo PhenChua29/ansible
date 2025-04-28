@@ -5,14 +5,20 @@
       - grub
       - efibootmgr
       - os-prober
+      - linux # incase vmlinuz-linux is not found
     state: present
 
 - name: Run grub-install
+  become: true
   ansible.builtin.command:
     argv:
       - grub-install
       - --efi-directory={{ efi_dir }}
       - --bootloader-id=GRUB
+      - --modules=tpm
+      - --disable-shim-lock
+  register: result
+  changed_when: result.rc == 0
 
 - name: Enable os-prober for grub to detect other systems
   ansible.builtin.lineinfile:
@@ -31,6 +37,8 @@
     argv:
       - grub-mkconfig
       - --output=/boot/grub/grub.cfg
+  register: result
+  changed_when: result.rc == 0
 
 - name: Get config file's status
   ansible.builtin.stat:
@@ -45,4 +53,6 @@
   ansible.builtin.debug:
     msg: "Generate grub's config file successfully."
   when: conf_file_status.stat.exists
-  
+
+- name: Setup secure boot support
+  include_tasks: ./secure-boot.yml

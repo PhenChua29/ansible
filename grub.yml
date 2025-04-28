@@ -16,7 +16,7 @@
   become: true
   vars_prompt:
     - name: efi_dir
-      prompt: Please enter the location of the EFI directory (it must be mounted on /efi or /mnt, and the value should be one of those two paths)
+      prompt: Please enter the location of the EFI directory (it must be /boot, /efi or /mnt, and the value should be one of those paths)
       private: false
   roles:
     - grub
